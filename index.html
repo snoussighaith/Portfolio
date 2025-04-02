@@ -556,19 +556,25 @@
           </div>
 
           <div class="col-lg-8">
-            <form id="contactForm">
+            <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+              <!-- Replace with your Access Key -->
+              <input type="hidden" name="access_key" value="7ee87f57-7b4a-4da1-a0fa-c99fef5555b2">
+              
               <div class="mb-3">
                 <label for="name" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="name" required>
+                <input type="text" class="form-control" id="name" name="name" required>
               </div>
+              
               <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="email" required>
+                <input type="email" class="form-control" id="email" name="email" required>
               </div>
+              
               <div class="mb-3">
                 <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" rows="4" required></textarea>
+                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
               </div>
+              
               <button type="submit" class="btn btn-primary" style="display: inline-block; text-align: center; padding: 12px 30px; font-size: 16px; margin-top: 20px;">
                 Send Message
               </button>
@@ -579,6 +585,30 @@
               Thank you for sending your message!
             </div>
           </div>
+          
+          <script>
+            document.getElementById("contactForm").addEventListener("submit", function(event) {
+              event.preventDefault(); // Prevent the default form submission
+              
+              let formData = new FormData(this);
+              
+              fetch(this.action, {
+                method: this.method,
+                body: formData
+              })
+              .then(response => response.json())
+              .then(result => {
+                if(result.success) {
+                  document.getElementById("thankYouMessage").style.display = "block";
+                  this.reset(); // Clear form fields after submission
+                } else {
+                  alert("Error sending message. Please try again.");
+                }
+              })
+              .catch(error => console.error("Error:", error));
+            });
+          </script>
+          
           
             <!-- Message display -->
             <div id="thankYouMessage" class="alert alert-success mt-4" style="display:none;">
